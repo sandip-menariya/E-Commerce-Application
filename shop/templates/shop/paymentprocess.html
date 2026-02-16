@@ -1,0 +1,29 @@
+{% extends 'shop/boiler_plate.html' %}
+
+{% block title %}Payment Process{% endblock title %} 
+{% block body %}
+<form method="POST">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+    var options = {
+        key: "{{razorpay_key}}",
+        amount: "{{order.amount}}", 
+        currency: "INR",
+        name: "{{order.name}}",
+        description: "Test Transaction",
+        order_id: "{{order.provider_order_id}}",
+        callback_url: "{{callback_url}}",
+        redirect: true,
+        notes: {
+            "address": "My-Shop"
+        },
+        theme: {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+    </script>
+    <input type="hidden" custom="Hidden Element" name="hidden">
+</form>
+{% enblock body }

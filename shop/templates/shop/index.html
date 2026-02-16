@@ -1,0 +1,133 @@
+{% extends "shop/boiler_plate.html" %}
+{% block title %} Myshop Shop {% endblock title %}
+{% block body %}
+<!-- if there is any error or message we are showing them at top -->
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}}" role="alert">{{ message }}</div>
+{% endfor %}
+{% endif %}
+<!-- welcome message -->
+{% if user.is_authenticated %}
+<p>Welcome, {{ user.username }}!</p>
+{% else %}
+<p>Welcome, Guest! Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a>.</p>
+{% endif %}
+<!-- carousel slider -->
+{% if categories %}
+<div class="container-fluid m-3 mx-1">
+{% for category, curr_items in categories.items %}
+  <h3>{{category}}</h3>
+  <div id="Latest-{{category}}" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      {% for i in curr_items %}
+      <!-- <p>{{ forloop.counter0 }}</p> -->
+      <button type="button" data-bs-target="#Latest-{{category}}" data-bs-slide-to="{{ forloop.counter0 }}"
+        class="{%if forloop.first %}active{% endif %}" {% if forloop.first %}aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter0 }}"></button>
+      {% endfor %}
+    </div>
+    <div class="carousel-inner">
+      {% for items in curr_items %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <div class="row p-3">
+          {% for item in items %}
+          <div class="card col-md-3">
+            <img class="card-img-top" src="{{ item.get_img_url }}" alt="{{ item.title }}"/>
+            <p>{{ item.user }}</p>
+            <div class="card-body">
+              <h5 class="card-title">{{ item.title }}</h5>
+              <p class="card-text">{{ item.summary }}</p>
+              <p class="left">₹{{ item.price }}</p>
+              <small class="right">{{ item.publisher }}</small>
+            <button type="button" id="{{item.id}}" class="cart cart-{{category}} btn btn-outline-danger" role="button">Add to Cart</button>  
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" data-bs-target="#Latest-{{category}}" role="button" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon bg-secondary" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" data-bs-target="#Latest-{{category}}" role="button" data-bs-slide="next">
+      <span class="carousel-control-next-icon bg-secondary" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+<!-- carousel slider ends -->
+ <script>
+$(".cart").click(function(){
+  var item_id=this.id;
+  $.ajax({
+    url:'add_to_cart/',
+    type:'POST',
+    data:{
+      "product_id":item_id,
+      "csrfmiddlewaretoken":"{{ csrf_token }}",
+    },
+    success: function(response){
+      alert("item added successfully");
+    }
+  });
+});
+// var item=localStorage.getItem("cart");
+// var cart_Tab=document.getElementById("cart_tab");
+// if(item==null)
+// {
+//   cart={};
+// }
+// else{
+//   cart=JSON.parse(item);
+//   update_cart_btn(cart);
+//   cart_Tab.innerHTML=`Cart-items(Objects:${Object.keys(cart).length})`;
+// }
+// $(".cart").click(function()
+// {
+//   var prod=this.id;
+//   console.log("clicked "+prod);
+//   if(cart[prod]==undefined)
+// {
+//   cart[prod]=1;
+// }
+// else{
+//   cart[prod]+=1;
+// }
+// localStorage.setItem("cart", JSON.stringify(cart));
+// var total_items=0;
+// for(var item in cart)
+// {
+//   total_items+=cart[item];
+// }
+// $(".minus").click(function(){
+//   var id=this.id.slice(6);
+//   console.log("minus clicked");
+//   if(cart["cart-"+id]>0)
+// {
+//   cart["cart-"+id]-=1;
+//   if(cart["cart-"+id]==0)
+//   {
+//     delete cart["cart-"+id];
+//   }
+// }
+// })
+// // cart_Tab.innerHTML=`Cart-items(Objects:${Object.keys(cart).length})`;
+// cart_Tab.innerHTML=`Cart-items(Objects:${total_items})`;
+// console.log(cart);
+// });
+// function update_cart_btn(cart){
+//   for(var item in cart)
+//   {
+//     add_btn=document.getElementById(item);
+//     console.log(item);
+//     add_btn.innerHTML="<div class='btn minus btn-success' id='minus-"+item+"'>-</div><span>"+cart[item]+"</span><div class='btn add btn-success' id='add-"+item+"'>+</div>";
+//   }
+// }
+
+</script>
+
+{% endblock body %}

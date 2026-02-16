@@ -1,0 +1,9 @@
+{% extends "shop/boiler_plate.html" %}
+{% block title %}Payment Failed{% endblock title %}
+
+{% block body %}
+<h4>{{ status }}</h4>
+<h2 class="text">Hurray🥳🥳🎉🎉 Your <span style="color: blue;">Order Placed Successfully.</span></h2>
+<h3>You're viewing this page because your payment request has been <span style="color: blue;">Succeed</span>.</h3>
+<a href="{% url 'home' %}">go back to home</a>
+{% endblock body %}

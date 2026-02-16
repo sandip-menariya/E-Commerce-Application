@@ -1,0 +1,90 @@
+<form id="user_address_form">
+          <label for="full_name">Full Name</label>
+          <input type="text" id="full_name" name="full_name" class="form-control mb-3"
+          {% if address %} value="{{ address.full_name }}" {% endif %} required/>
+          <label for="address_line">Address Line</label>
+          <input type="text" id="address_line" name="address_line" class="form-control mb-3"
+          {% if address %} value="{{ address.address_line }}" {% endif %} required/>
+          <label for="country">Country</label>
+          <input type="text" id="country" name="country" class="form-control mb-3"
+          {% if address %} value="{{ address.country }}" {% endif %} required/>
+          <label for="state">State</label>
+          <input type="text" id="state" name="state" class="form-control mb-3"
+          {% if address %} value="{{ address.state }}" {% endif %} required/>
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" class="form-control mb-3"
+          {% if address %} value="{{ address.city }}" {% endif %} required/>
+          <label for="postal_code">Postal Code</label>
+          <input type="text" id="postal_code" name="postal_code" class="form-control mb-3"
+          {% if address %} value="{{ address.postal_code }}" {% endif %} required/>
+          <label for="save_address">Save address</label>
+          <input type="submit" placeholder="submit" class="btn btn-warning" name="save_address" id="save_address" >
+        </form>
+
+
+
+  <!-- sending the address of user data to backend using ajax -->
+
+  // $("document").ready(function(){
+// $("#user_address_form").submit(function(event){
+//   event.preventDefault();
+//   const form=this;
+//   const formdata= new FormData(form);
+//   const submit_btn=form.querySelector("input[type='submit']");
+//   submit_btn.disabled=true;
+//   // console.log(formdata.entries());
+//   fetch(form.action,{
+//     method:"POST",
+//     body:formdata,
+//     headers: {
+//             'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+//             'X-Requested-With': 'XMLHttpRequest' // Tells Django this is AJAX
+//         }
+//   }).then(Response=>Response.json()).then(data=>{
+//     if(data.success){
+//       $("#user_address_form_container").addClass("hidden");
+//       form.reset();
+//       alert("data saved successfully");
+//     }
+//     else{
+//       alert("error"+JSON.stringify(data.errors));
+//     }
+//   }).catch(error=>{
+//     console.log("Error "+error);
+//     alert("something went wrong please try again.");
+//   }).finally(()=>{
+//     submit_btn.disabled=false;
+//     submit_btn.innerText="Save Address";
+//   });
+//   // const full_name=document.getElementById("full_name").value;
+//   // const address_line=document.getElementById("address_line").value;
+//   // // const mobile=document.getElementById("mobile").value;
+//   // const country=document.getElementById("country").value;
+//   // const state=document.getElementById("state").value;
+//   // const city=document.getElementById("city").value;
+//   // const postal_code=document.getElementById("postal_code").value;
+//   // console.log("here we are");
+  
+//   // console.log(full_name,address_line,mobile,country,state,city,postal_code);
+//   // $.ajax({
+//   //   url:"save_user_address/",
+//   //   type:"post",
+//   //   data:{
+//   //     "full_name":full_name,
+//   //     "address_line":address_line,
+//   //     "mobile":mobile,
+//   //     "country":country,
+//   //     "state":state,
+//   //     "city":city,
+//   //     "postal_code":postal_code,
+//   //     "csrfmiddlewaretoken":"{{ csrf_token }}"
+//   //   },
+//   //   success:function(response){
+//   //     alert("address saved successfully.")
+//   //   }
+//   // });
+// });
+// });
+
+    <!-- <input type="text" name="category" class="form-control" id="category"  placeholder="category"> -->
+     <!-- {% extends "socialaccount/base_entrance.html" %} -->

@@ -1,0 +1,8 @@
+{% extends "shop/boiler_plate.html" %}
+{% block title %}Payment Failed{% endblock title %}
+
+{% block body %}
+<h4>{{ status }}</h4>
+<h3>You're viewing this page because your payment request has been failed.</h3>
+<a href="{% url 'home' %}">go back to home</a>
+{% endblock body %}

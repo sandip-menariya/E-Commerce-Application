@@ -1,0 +1,92 @@
+{% extends 'shop/boiler_plate.html' %}
+{% block title %}Merchant Dashboard{% endblock title %}
+{% block body %}
+{% if user.role == 'MERCHANT' %}
+    <div class="container-fluid">
+        <p id="delete_msg" class="alert"></p>
+        <h3 class="text fs-2 title text-center fw-bold">Your Items</h3>
+        {% for product in products %}
+        {% if forloop.first or forloop.counter0|divisibleby:2 %}
+        <div class="row">
+        {% endif %}
+        <div class="my-4 col-md-6 d-flex align-items-center" id="{{ product.id }}">
+            <div class="col-md-2 mx-2">
+                <img class="card-img-top" src="{{ product.get_img_url }}" alt="product">
+            </div>
+            <div class="col-md-2 mx-2">
+                <p class="card-title"> <span class="fw-bold f4-2">Title:</span><span class="title">{{ product.title }}</span></p>
+                <p class="price"><span class="fw-bold f4-2">Price:</span>₹{{ product.price }}</p>
+            </div>
+            <div class="col-md-4 right">
+            <a href="{% url 'update_product' product.id %}" class="btn btn-warning">Update</a>
+            <a class="btn btn-danger delete-btn" data-id="{{ product.id }}">Delete</a>
+            </div>
+        </div>
+        {% if not forloop.counter0|divisibleby:2 or forloop.last %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <dialog id="customConfirm" style="min-width: 400px; min-height: 200px;" class="confirm-modal">
+    <div class="content">
+        <h4 id="confirmTitle">Confirm Action</h4>
+        <p id="confirmMessage" class="border fw-bold">Are you sure you want to proceed?</p>
+        <div class="actions">
+            <button id="cancelBtn" class="btn-secondary">Cancel</button>
+            <button id="okBtn" class="btn-primary">OK</button>
+        </div>
+    </div>
+</dialog>
+{% endif %}
+<script>
+   async function askConfirm(action,message)
+    {
+        document.getElementById("confirmTitle").innerText=action;
+        document.getElementById("confirmMessage").innerText=message;
+        const dialog=document.getElementById("customConfirm")
+        const cancelBtn=document.getElementById("cancelBtn");
+        const okBtn=document.getElementById("okBtn");
+        dialog.showModal();
+        return new Promise((resolve)=>{
+            okBtn.onclick=()=>{
+                dialog.close();
+                resolve(true);
+            },
+            cancelBtn.onclick=()=>{
+                dialog.close();
+                resolve(false);
+            }
+        });
+    }
+
+    $(document).ready(function(){
+    $(".delete-btn").click(async function(e) {
+        e.preventDefault(); // Stop the link from jumping
+        var prod_id = $(this).data("id"); // Get ID from data attribute
+        var prod = document.getElementById(prod_id);
+        const title = prod.querySelector(".title").innerText;
+        const action="Are you sure you want to delete this item?"
+        const conf=await askConfirm(action,title);
+        if(conf)
+        {
+        $.ajax({
+            type:"POST",
+            url:"{% url 'delete_item' %}",
+            data:{
+                "prod_id":prod_id,
+                "csrfmiddlewaretoken":"{{ csrf_token }}",
+            },success:(response=>{
+                $("#delete_msg").text(response.message);
+                $("#delete_msg").addClass("alert alert-warning");
+            }),
+            error:(err=>{
+                $("#delete_msg").text(err);
+                $("#delete_msg").addClass("alert alert-warning");
+            }),
+        });
+        }
+    });
+    });
+</script>
+{% endblock body %}
+

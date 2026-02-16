@@ -1,0 +1,26 @@
+.hide{
+    display: none;
+}
+.card-img-top{
+    max-height: 270px;
+}
+.settings-dropdown{
+    min-width: 200px;
+    /* overflow-x: hidden; */
+}
+
+/* Centering and Backdrop */
+.confirm-modal {
+    border: none;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    width: 300px;
+}
+.confirm-modal::backdrop {
+    background: rgba(0, 0, 0, 0.5); /* Dims the background */
+    backdrop-filter: blur(2px);
+}
+.actions { text-align: right; margin-top: 20px; }
+.confirm-modal .btn-primary { background: #d9534f; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px; }
+.confirm-modal .btn-secondary { background: #eee; border: none; padding: 8px 16px; cursor: pointer; margin-right: 10px; border-radius: 4px; }

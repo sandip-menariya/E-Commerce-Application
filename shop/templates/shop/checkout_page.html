@@ -1,0 +1,321 @@
+{% extends 'shop/boiler_plate.html' %}
+
+{% block title %}Checkout Page{% endblock title %}
+
+{% block body %}
+<style>
+  .hidden{display: none;}
+  #user_address_form_container{position: relative;}
+</style>
+{% if products %}
+  <h2 class="mb-4">You have {{ products|length }} item(s) in your cart</h2>
+{% endif %}
+{% if messages %}
+<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+{% for message in messages %}
+
+{% endfor %}
+{% endif %}
+<section class="h-100 w-100 h-custom">
+  <div class="container-fluid h-100 py-5">
+    {% if user.is_authenticated %}
+    <div class="card w-100 shadow-2-strong mb-5 mb-lg-0 modal-header hidden" id="user_address_form_container">
+      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+       <button type="button" class="btn-close" aria-label="Close" id="btn-close"></button>
+    <div class="card-body p-4 w-75" >
+        <h3>Address</h3>
+            <form  id="user_address_form">
+              {% csrf_token %}
+              {{ address.as_p }}
+              <input type="submit" id="save_address" class="btn btn-warning" placeholder="Save Address">
+            </form>
+    </div>
+    </div>
+    <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px;">
+    <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-6 col-lg-6 col-xl-6">
+        <h5 class="mb-3">Billing address</h5>
+          <div class="row">
+            {% if user_address %}
+            <span id="full_name">{{ user_address.full_name }}</span>
+              <span id="address_line">{{ user_address.address_line }}</span>
+              <span id="postal_code">{{ user_address.postal_code }}</span>
+              <a href="#user_address_form_container"><button class="btn btn-warning display_address_form">Change Address</button></a>
+            {% else %}
+            <p>No shipping address available.</p>
+            <a href="#user_address_form_container"><button class="btn btn-warning display_address_form">Add Address</button></a>
+           {% endif %}
+            </div>
+          </div>
+      </div>
+    </div>
+    </div>
+    {% endif %}
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" class="h5">Shopping Bag</th>
+                <th scope="col">Format</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for curr_product in products %}
+              <tr>
+                <th scope="row">
+                  <div class="d-flex align-items-center">
+                    <!-- <img src="https://i.imgur.com/2DsA49b.webp" class="img-fluid rounded-3" -->
+                    <img src="{{ curr_product.product.get_img_url }}" class="img-fluid rounded-3"
+                      style="width: 120px;" alt="Book">
+                    <div class="flex-column ms-4">
+                      <div class="form-check form-check-inline">
+                        <input class="items-to-include form-check-input" type="checkbox" id="{{ curr_product.product.id }}" value="{{ curr_product.product.id }}" checked>
+                      </div>
+                      <p class="mb-2">{{ curr_product.product.title  }}</p>
+                      <p class="mb-0">{{ curr_product.product.publisher }}</p>
+                    </div>
+                  </div>
+                </th>
+                <td class="align-middle">
+                  <!-- <p class="mb-0" style="font-weight: 500;">{{ curr_product.format }}</p> -->
+                </td>
+                <td class="align-middle">
+                  <div class="d-flex flex-row">
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                      onclick="this.parentNode.querySelector('input[type=number]').stepDown();update_amounts();">
+                      <i class="fas fa-minus"></i>
+                    </button>
+
+                    <input id="form1" min="0" name="quantity" value="{{ curr_product.quantity }}" type="number"
+                      class="form-control form-control-sm product_quantity" style="width: 50px;"/>
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                      onclick="this.parentNode.querySelector('input[type=number]').stepUp();update_amounts();">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </td>
+                <td class="align-middle">
+                  <p class="mb-0 product_price" style="font-weight: 500;">₹{{ curr_product.product.price }}</p>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px;">
+          <div class="card-body p-4">
+
+            <div class="row">
+              <div class="col-md-6 col-lg-4 col-xl-3 mb-4 mb-md-0">
+                <form>
+                  <div class="d-flex flex-row pb-3">
+                    <div class="d-flex align-items-center pe-2">
+                      <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel1v"
+                        value="" aria-label="..." checked/>
+                    </div>
+                    <div class="rounded border w-100 p-3">
+                      <p class="d-flex align-items-center mb-0">
+                        <i class="fab fa-cc-mastercard fa-2x text-body pe-2"></i>Credit Card
+                      </p>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row pb-3">
+                    <div class="d-flex align-items-center pe-2">
+                      <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel2v"
+                        value="" aria-label="..." />
+                    </div>
+                    <div class="rounded border w-100 p-3">
+                      <p class="d-flex align-items-center mb-0">
+                        <i class="fab fa-cc-visa fa-2x fa-lg text-body pe-2"></i>Debit Card
+                      </p>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div class="d-flex align-items-center pe-2">
+                      <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel3v"
+                        value="" aria-label="..." />
+                    </div>
+                    <div class="rounded border w-100 p-3">
+                      <p class="d-flex align-items-center mb-0">
+                        <i class="fab fa-cc-paypal fa-2x fa-lg text-body pe-2"></i>PayPal
+                      </p>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-6 col-lg-4 col-xl-6">
+                <div class="row">
+                  <div class="col-12 col-xl-6">
+                    <div data-mdb-input-init class="form-outline mb-4 mb-xl-5">
+                      <input type="text" id="typeName" class="form-control form-control-lg" siez="17"
+                        placeholder="John Smith" />
+                      <label class="form-label" for="typeName">Name on card</label>
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-4 mb-xl-5">
+                      <input type="text" id="typeExp" class="form-control form-control-lg" placeholder="MM/YY"
+                        size="7" id="exp" minlength="7" maxlength="7" />
+                      <label class="form-label" for="typeExp">Expiration</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-xl-6">
+                    <div data-mdb-input-init class="form-outline mb-4 mb-xl-5">
+                      <input type="text" id="typeText" class="form-control form-control-lg" siez="17"
+                        placeholder="1111 2222 3333 4444" minlength="19" maxlength="19" />
+                      <label class="form-label" for="typeText">Card Number</label>
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-4 mb-xl-5">
+                      <input type="password" id="typeText" class="form-control form-control-lg"
+                        placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3" />
+                      <label class="form-label" for="typeText">Cvv</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-xl-3">
+                <div class="d-flex justify-content-between" style="font-weight: 500;">
+                  <p class="mb-2">Subtotal</p>
+                  <p class="mb-2" id="subtotal">₹0.00</p>
+                </div>
+
+                <div class="d-flex justify-content-between" style="font-weight: 500;">
+                  <p class="mb-0">Shipping</p>
+                  <p class="mb-0" id="shipping_cost">₹0.00</p>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-between mb-4" style="font-weight: 500;">
+                  <p class="mb-2">Total (tax included)</p>
+                  <p class="mb-2" id="total_amount">₹0.00</p>
+                </div>
+
+                <button id="checkout_btn" type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block btn-lg">
+                  <div class="d-flex justify-content-between">
+                    <span>Checkout</span>
+                    <span id="checkout_total">₹0.00</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   {% if not products %}
+    <p>No products available in cart</p>
+    {% endif %}
+</section>
+<script>
+  const product_quantities=document.querySelectorAll(".product_quantity");
+  const check_products=document.getElementsByClassName("form-check-input");
+  var products=[];
+  function update_amounts(){
+    const subtotal_elem=document.getElementById("subtotal");
+    const shipping_elem=document.getElementById("shipping_cost");
+    const total_elem=document.getElementById("total_amount");
+    const checkout_total_elem=document.getElementById("checkout_total");
+    const product_prices=document.querySelectorAll(".product_price");
+    let subtotal=0;
+    var products_to_include=[];
+    for(let i=0;i<product_quantities.length;i++){
+      if(!check_products[i].checked)
+      {
+        continue;
+      }
+      const quantity=parseInt(product_quantities[i].value);
+      const price=parseFloat(product_prices[i].innerHTML);
+      products_to_include.push({"id":check_products[i].id,"quantity":quantity});
+      subtotal+=(quantity>0?quantity:0)*(price>0?price:0);
+    }
+    const shipping=subtotal>500?0:(Math.round(subtotal*0.01*100)/100);
+    const total=Math.round((subtotal+shipping)*100)/100;
+    subtotal_elem.innerHTML="₹"+subtotal.toFixed(2);
+    shipping_elem.innerHTML="₹"+shipping.toFixed(2);
+    total_elem.innerHTML="₹"+total.toFixed(2);
+    checkout_total_elem.innerHTML="₹"+total.toFixed(2);
+    products=products_to_include;
+  }
+  update_amounts();
+  Array.from(product_quantities).forEach(function(element){
+    element.addEventListener("input",update_amounts);
+  });
+  Array.from(check_products).forEach(function(element)
+{
+  element.addEventListener("change",update_amounts);
+});
+  // user address saving/update using Ajax
+ $(document).ready(function () {
+            $('#user_address_form').submit(function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: "{% url 'save_user_address' %}",
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        $("#user_address_form_container").addClass("hidden");
+                        var address=response.user_address;
+                        $("#full_name").text(address.full_name);
+                        $("#address_line").text(address.address_line);
+                        $("#postal_code").text(address.postal_code);
+                        alert(response.message);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(textStatus);
+                    }
+                });
+            });
+        });
+        $("#checkout_btn").click(function(element){
+          if(products.length>0)
+        {
+          $.ajax({
+            url:"{% url 'checkout_user' %}",
+            type:"POST",
+            headers:{"X-CSRFToken":"{{ csrf_token }}"},
+            contentType:"application/json",
+            data:JSON.stringify({"items":products}),
+            success:function(response){
+              var options = {
+                  key: response.razorpay_merchant_key,
+                  amount: response.amount, 
+                  currency: response.currency,
+                  description: "Test Transaction",
+                  order_id: response.razorpay_order_id,
+                  callback_url: response.callback_url,
+                  redirect: true,
+                  notes: {
+                      "address": "My-Shop"
+                  },
+                  theme: {
+                      "color": "#3399cc"
+                  }
+              };
+              var rzp1 = new Razorpay(options);
+              rzp1.open();
+            },
+            error:function(err){
+              console.log(err);
+              alert("something went wrong!!")
+            },
+          });
+        }
+        else{
+          alert("you must have items in cart to checkout!");
+        }
+        });
+
+$(".display_address_form,#btn-close").on("click",function(){
+  $("#user_address_form_container").toggleClass("hidden");
+});
+</script>
+{% endblock body %}
