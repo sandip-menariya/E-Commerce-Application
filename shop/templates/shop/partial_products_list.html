@@ -1,0 +1,13 @@
+          {% for item in categories %}
+          <div class="card col-md-3 my-2 px-2">
+            <img class="card-img-top" src="{{ item.get_img_url }}" alt="{{ item.title }}"/>
+            <p>{{ item.user }}</p>
+            <div class="card-body">
+              <h5 class="card-title">{{ item.title }}</h5>
+              <p class="card-text">{{ item.summary }}</p>
+              <p class="left">₹{{ item.list_price }}</p>
+              <small class="right">{{ item.publisher }}</small>
+            <button type="button" id="{{item.id}}" class="cart cart-{{item.category}} btn btn-outline-danger" role="button">Add to Cart</button>  
+            </div>
+          </div>
+          {% endfor %}

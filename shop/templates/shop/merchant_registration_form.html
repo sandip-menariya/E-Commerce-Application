@@ -44,6 +44,7 @@
 </section>
 <script>
   $(document).ready(()=>{
+    // adhar card details client validation as it has length of maximum 12 and first characters must be in between (2-9) each and other 11 characters can be in between (0-9) each.
     $("#id_adhar_card").on("input",function(element){
       const parent_node=$(this).parent();
       const details=$(this).val().replace(/[-\s]/g,'');
@@ -60,6 +61,7 @@
         $("button[type='submit']").prop("disabled",false);
       }
     });
+    // pan card details client validation as it has length of maximum 10 and first 5 characters must be alphabets with 4th character must be of specific type after that 4 characters must be integers(0-9) and last 1 character must be alphabet 
     $("#id_pan_card").on("input",function(element){
       const parent_node=$(this).parent();
       const details=$(this).val().toUpperCase().replace(/[-\s]/g,'');

@@ -21,5 +21,6 @@ urlpatterns=[
     path("merchant_register",views.merchant_register,name="merchant_register"),
     path("merchant_account_register",views.create_merchant_account,name="merchant_account_register"),
     path("merchant_dashboard/",views.merchant_dashboard,name="merchant_dashboard"),
-    path("callback/",views.callback)
+    path("callback/",views.callback),
+    path("search_products/",views.search_products,name="search_products"),
 ]

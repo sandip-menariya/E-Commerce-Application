@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'mptt',
 ]
 
 MIDDLEWARE = [
@@ -121,7 +122,7 @@ ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
-LOGIN_REDIRECT_URL="/shop/"
+LOGIN_REDIRECT_URL="/"
 
 # 2. Prevent Allauth from taking users to /accounts/profile/ (the default)
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True 
@@ -131,7 +132,7 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 # 3. If it's a brand new user, they might be sent to a signup form first.
 # Force them to home even after first-time signup:
-ACCOUNT_SIGNUP_REDIRECT_URL = '/shop/'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 
 # SIGN_UP_REDIRECT_URL="/"
 

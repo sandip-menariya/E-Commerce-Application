@@ -1,5 +1,6 @@
 from django import forms
-from .models import UserAddressModel, MerchantAccount
+from .models import UserAddressModel, MerchantAccount, ProductCategories
+from mptt.forms import TreeNodeChoiceField
 
 class UserAddressForm(forms.ModelForm):
     class Meta:
@@ -24,4 +25,18 @@ class MerchantRegistrationForm(forms.ModelForm):
             "adhar_card":forms.TextInput(attrs={"class":"input form-control"}),
             "pan_card":forms.TextInput(attrs={"class":"input form-control"}),
             "bank_details":forms.TextInput(attrs={"class":"input form-control"}),
+        }
+
+class ProductCategoryForm(forms.ModelForm):
+    parent=TreeNodeChoiceField(
+        queryset=ProductCategories.objects.all(),
+        required=False,
+        widget=forms.Select(attrs={"class":"form-input form-control"}),
+        label="Select Category",)
+    class Meta:
+        model=ProductCategories
+        fields=["parent"]
+        widgets={
+            # "category":forms.TextInput(attrs={"class":"form-control input","placeholder":"eg. laptop"}),
+            "parent":forms.TextInput(attrs={"class":"form-control input","placeholder":"eg. laptop"}),
         }

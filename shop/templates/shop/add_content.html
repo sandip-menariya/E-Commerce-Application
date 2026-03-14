@@ -1,4 +1,5 @@
 {% extends "shop/boiler_plate.html" %}
+{% load mptt_tags %}
 {% block title %} new content {% endblock title %}
 {% block body %}
 {% if messages %}
@@ -12,24 +13,14 @@
   {% csrf_token %}
   <div class="col-md-6 me-2">
   <div class="form-group">
-    <label for="category">Category</label>
-    <select class="form-select" name="category" id="category" required>
-      <option {% if product %}value="{{ product.category }}"{% else %} value="" {% endif %} selected>{% if product %}{{ product.category }} {% else %} Choose Category {% endif %}</option>
-      <option value="electronics">Electronics</option>
-      <option value="clothing">Clothing</option>
-      <option value="electric">Electric</option>
-      <option value="book">Book</option>
-      <option value="homeware">Home-Ware</option>
-      <option value="kitchenware">Kitchen-Ware</option>
-      <option value="skin_personal_care">Skin & Personal Care</option>
-    </select>
+    {{ category_form }}
   </div>
-  <label for="sub_category">
+  <!-- <label for="sub_category">
     Sub Category
     <select class="form-select" name="sub_category" id="sub_category" required>
       <option {% if product %}value="{{ product.sub_category }}" {% else %} value="" {% endif %} selected>{% if product %}{{ product.sub_category }} {% else %} Choose Sub-Category {% endif %}</option>
     </select>
-  </label>
+  </label> -->
   <div class="form-group">
     <label for="title">Title</label>
     <input type="text" {% if product %}value="{{ product.title }}" {% endif %} name="title" class="form-control" id="title" placeholder="title" required>
@@ -45,12 +36,12 @@
     <input type="text" name="publisher" {% if product %}value="{{ product.publisher }}" {% endif %} class="form-control" id="publisher" placeholder="publisher">
   </div>
   <div class="form-group">
-    <label for="date">Date</label>
-    <input type="date" name="date" {% if product %}value="{{ product.date }}" {% endif %} class="form-control" id="date" placeholder="date">
+    <label for="base_price">Base Price</label>
+    <input type="number" step="0.01" {% if product %}value="{{ product.base_price}}" {% endif %} name="base_price" class="form-control" id="base_price" placeholder="Product Base Price" required>
   </div>
   <div class="form-group">
-    <label for="price">Price</label>
-    <input type="number" step="0.01" {% if product %}value="{{ product.price }}" {% endif %} name="price" class="form-control" id="price" placeholder="price" required>
+    <label for="list_price">List Price</label>
+    <input type="number" step="0.01" {% if product %}value="{{ product.list_price }}" {% endif %} name="list_price" class="form-control" id="list_price" placeholder="Product Listing Price" required>
   </div>
   <div class="form-group">
     Chose one option to add image:
@@ -78,35 +69,6 @@
 </form>
 </div>
 <script>
-  $(document).ready(function(){
-  const cat =document.getElementById("category");
-  const sub_category=document.getElementById("sub_category");
-  console.log("script running");
-  
-  cat.addEventListener("click",function(){
-    if(cat.value=='electronics'){
-      sub_category.innerHTML="<option value='smartphone'>Smartphones</option><option value='laptop'>Laptops</option><option value='camera_and_photo'>Camera & Photo</option><option value='Phone_and_aceessories'>Cell Phone Accessories</option><option value='wearable_technologies'>Wearable Technology</option><option value='Audio'>Audio</option>"
-    }
-    else if(cat.value=='clothing'){
-      sub_category.innerHTML="<option value='women'>Women</option><option value='men'>Men</option><option value='girl'>Girls</option><option value='boy'>Boys</option><option value='baby'>Baby</option><option value='accessory'>Accessories</option>"
-    }
-    else if(cat.value=='electric'){
-      sub_category.innerHTML="<option value='tv_and_video'>TV & Video</option><option value='home_audio'>Home Audio</option><option value='headphones'>Headphones</option><option value='wearable_technologies'>Wearable Technology</option><option value='car_electric'>Car Electric</option>"
-    }
-    else if(cat.value=='book'){
-      sub_category.innerHTML="<option value='literature_and_fiction'>Literature & Fiction</option><option value='children_s_books'>Children's Books</option><option value='textbooks'>Textbooks</option><option value='comics_and_graphic_novels'>Comics & Graphic Novels</option><option value='history'>History</option>"
-    }
-    else if(cat.value=='homeware'){
-      sub_category.innerHTML="<option value='furniture'>Furniture</option><option value='bedding'>Bedding</option><option value='bath'>Bath</option><option value='home_decor'>Home Decor</option><option value='storage_and_organization'>Storage & Organization</option>"
-    }
-    else if(cat.value=='kitchenware'){
-      sub_category.innerHTML="<option value='cookware'>Cookware</option><option value='furniture'>Furniture</option><option value='dinnerware'>Dinnerware</option><option value='kitchen_tools_and_gadgets'>Kitchen Tools & Gadgets</option><option value='small_appliances'>Small Appliances</option><option value='food_storage'>Food Storage</option>"
-    }
-    else if(cat.value=='skin_personal_care'){
-      sub_category.innerHTML="<option value='makeup'>Makeup</option><option value='skin_care'>Skin Care</option><option value='hair_care'>Hair Care</option><option value='fragrance'>Fragrance</option><option value='personal_care_appliances'>Personal Care Appliances</option>"
-    }
-  });
-  });
    function image_validation(image_name)
   {
     return (image_name.endsWith(".jpg") || image_name.endsWith(".jpeg") || image_name.endsWith(".png") || image_name.endsWith(".webp"))
@@ -118,7 +80,7 @@
         image_selector.innerHTML=`<label for="image">Image</label><input type="file" name="image" class="form-control" id="image" placeholder="image" required></div>`;
         const image=document.getElementById("image");
         image.addEventListener("input",()=>{
-          if(!image_validation(image.value))
+        if(!image_validation(image.value))
         {
           img_url_error.innerText="please enter a valid url";
         }
@@ -141,25 +103,5 @@
         });
       }
       });
- 
-  
-  // console.log(image);
-  
-  //   if(image)
-  //   {
-  //   console.log("entered image validation");
-  //   if(!image_validation(image.value))
-  //   {
-  //     image_selector.appendChild("<p style='color:red'>please enter a valid image url</p>");
-  //   }
-  // }
-  // else if(image_url)
-  // {
-  //   console.log("entered image url validation");
-  //   if(!image_validation(image_url.value))
-  // {
-  //   image_selector.appendChild("<p style='color:red'>please enter a valid image url</p>");
-  // }
-  // }
 </script>
 {% endblock body %}

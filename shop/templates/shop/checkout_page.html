@@ -100,14 +100,13 @@
                   </div>
                 </td>
                 <td class="align-middle">
-                  <p class="mb-0 product_price" style="font-weight: 500;">₹{{ curr_product.product.price }}</p>
+                  ₹<p class="mb-0 product_list_price" style="font-weight: 500;">{{ curr_product.product.list_price }}</p>
                 </td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
-
         <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px;">
           <div class="card-body p-4">
 
@@ -223,7 +222,7 @@
     const shipping_elem=document.getElementById("shipping_cost");
     const total_elem=document.getElementById("total_amount");
     const checkout_total_elem=document.getElementById("checkout_total");
-    const product_prices=document.querySelectorAll(".product_price");
+    const product_list_prices=document.querySelectorAll(".product_list_price");
     let subtotal=0;
     var products_to_include=[];
     for(let i=0;i<product_quantities.length;i++){
@@ -232,15 +231,16 @@
         continue;
       }
       const quantity=parseInt(product_quantities[i].value);
-      const price=parseFloat(product_prices[i].innerHTML);
+      const list_price=parseFloat(product_list_prices[i].innerHTML);
       products_to_include.push({"id":check_products[i].id,"quantity":quantity});
-      subtotal+=(quantity>0?quantity:0)*(price>0?price:0);
+      subtotal+=(quantity>0?quantity:0)*(list_price>0?list_price:0);
     }
     const shipping=subtotal>500?0:(Math.round(subtotal*0.01*100)/100);
     const total=Math.round((subtotal+shipping)*100)/100;
     subtotal_elem.innerHTML="₹"+subtotal.toFixed(2);
     shipping_elem.innerHTML="₹"+shipping.toFixed(2);
     total_elem.innerHTML="₹"+total.toFixed(2);
+    
     checkout_total_elem.innerHTML="₹"+total.toFixed(2);
     products=products_to_include;
   }

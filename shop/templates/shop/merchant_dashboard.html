@@ -2,6 +2,16 @@
 {% block title %}Merchant Dashboard{% endblock title %}
 {% block body %}
 {% if user.role == 'MERCHANT' %}
+    {{ month_labels|json_script:"month-labels-data" }}
+    {{ monthly_sales|json_script:"monthly-sales-data" }}
+    {{ category_labels|json_script:"category-labels-data" }}
+    {{ category_profits|json_script:"category-profits-data" }}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6"><canvas id="line_chart"  style="width:100%; max-height: 400px; max-width: 400px;"></canvas></div>
+            <div class="col-md-6"><canvas id="pie_chart"  style="width:100%; max-height: 400px; max-width: 700px;"></canvas></div>
+        </div>
+    </div>
     <div class="container-fluid">
         <p id="delete_msg" class="alert"></p>
         <h3 class="text fs-2 title text-center fw-bold">Your Items</h3>
@@ -15,7 +25,8 @@
             </div>
             <div class="col-md-2 mx-2">
                 <p class="card-title"> <span class="fw-bold f4-2">Title:</span><span class="title">{{ product.title }}</span></p>
-                <p class="price"><span class="fw-bold f4-2">Price:</span>₹{{ product.price }}</p>
+                <p class="base_price"><span class="fw-bold f4-2">Base Price:</span>₹{{ product.base_price }}</p>
+                <p class="list_price"><span class="fw-bold f4-2">List Price:</span>₹{{ product.list_price }}</p>
             </div>
             <div class="col-md-4 right">
             <a href="{% url 'update_product' product.id %}" class="btn btn-warning">Update</a>
@@ -72,10 +83,9 @@
         $.ajax({
             type:"POST",
             url:"{% url 'delete_item' %}",
-            data:{
-                "prod_id":prod_id,
-                "csrfmiddlewaretoken":"{{ csrf_token }}",
-            },success:(response=>{
+            headers:{"X-CSRFToken":"{{ csrf_token }}"},
+            data:{"prod_id":prod_id},
+            success:(response=>{
                 $("#delete_msg").text(response.message);
                 $("#delete_msg").addClass("alert alert-warning");
             }),
@@ -86,6 +96,58 @@
         });
         }
     });
+    //     const xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+    // const yValues = [55, 49, 44, 24, 15];
+    const xCategoryLabels=JSON.parse(document.getElementById("category-labels-data").textContent);
+    const yCategoryProfits=JSON.parse(document.getElementById("category-profits-data").textContent);
+    const barColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
+    console.log(yCategoryProfits);
+new Chart("pie_chart", {
+  type: "pie",
+  data: {
+      labels: xCategoryLabels,
+    datasets: [{
+        backgroundColor: barColors,
+      data: yCategoryProfits,
+    }]
+  },
+  options: {
+    title: {
+        display: true,
+        text: "Category Wise Profit Distribution."
+    }
+}
+});
+const xMonthLabels=JSON.parse(document.getElementById("month-labels-data").textContent);
+const yMonthlySales=JSON.parse(document.getElementById("monthly-sales-data").textContent);
+
+new Chart("line_chart", {
+  type: "line",
+  data: {
+    labels: xMonthLabels,
+    datasets: [{
+      backgroundColor:"rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yMonthlySales,
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Month Wise Total Sales."
+    },
+    scales: {
+            x: {
+                ticks: {
+                    // Force vertical display (90 degrees)
+                    minRotation: 0,
+                    maxRotation: 90,
+                    autoSkip: false // Ensures every label is shown
+                }
+            }
+        }
+  }
+});
     });
 </script>
 {% endblock body %}
