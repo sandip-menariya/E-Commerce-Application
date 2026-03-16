@@ -6,10 +6,11 @@
     {{ monthly_sales|json_script:"monthly-sales-data" }}
     {{ category_labels|json_script:"category-labels-data" }}
     {{ category_profits|json_script:"category-profits-data" }}
-    <div class="container-fluid">
+    <div class="container-fluid my-4">
+        <h3 class="text fs-2 title text-center fw-bold">Merchant Account Statistics</h3>
         <div class="row">
-            <div class="col-md-6"><canvas id="line_chart"  style="width:100%; max-height: 400px; max-width: 400px;"></canvas></div>
-            <div class="col-md-6"><canvas id="pie_chart"  style="width:100%; max-height: 400px; max-width: 700px;"></canvas></div>
+            <div class="col-md-6 text-center"><span class="fs-4">Month Wise Total Sales.</span><canvas id="line_chart"  style="width:100%; max-height: 400px; max-width: 400px;"></canvas></div>
+            <div class="col-md-6 text-center"><span class="fs-4">Category Wise Profit Distribution.</span><canvas id="pie_chart"  style="width:100%; max-height: 400px; max-width: 700px;"></canvas></div>
         </div>
     </div>
     <div class="container-fluid">

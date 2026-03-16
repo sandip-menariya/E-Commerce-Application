@@ -36,7 +36,6 @@
           {% for item in items %}
           <div class="card col-md-3">
             <img class="card-img-top" src="{{ item.get_img_url }}" alt="{{ item.title }}"/>
-            <p>{{ item.user }}</p>
             <div class="card-body">
               <h5 class="card-title">{{ item.title }}</h5>
               <p class="card-text">{{ item.summary }}</p>
@@ -90,10 +89,10 @@ $("#product-container").on("click",'.cart',function(){
 
 $(document).ready(function(){
 search_performed=document.getElementById("search_performed");
+const sentinal=document.querySelector("#loading-sentinal");
 if(search_performed.value=="off"){
 let page=1;
 const container=document.querySelector("#other-products");
-const sentinal=document.querySelector("#loading-sentinal");
 const observer= new IntersectionObserver((element)=>{
   if(element[0].isIntersecting){
     LoadProducts();
@@ -111,7 +110,7 @@ function LoadProducts(){
     if(!result.has_next){
       observer.unobserve(sentinal);
       sentinal.style.display="none";
-      alert("no more products available.....");
+      $("#product-container").append("<p style='font-size:25px; font-weight:bold;color:#7A838A;text-align:center;'>I think, you have reached the end.</p>");
     }
   }).catch(err=>{
     console.error("items fetch failed ",err);
@@ -119,66 +118,10 @@ function LoadProducts(){
 }
 }
 else{
+  sentinal.style.display="none";
   console.log("search performed...");
 }
 });
-
-
-
-
-// var item=localStorage.getItem("cart");
-// var cart_Tab=document.getElementById("cart_tab");
-// if(item==null)
-// {
-//   cart={};
-// }
-// else{
-//   cart=JSON.parse(item);
-//   update_cart_btn(cart);
-//   cart_Tab.innerHTML=`Cart-items(Objects:${Object.keys(cart).length})`;
-// }
-// $(".cart").click(function()
-// {
-//   var prod=this.id;
-//   console.log("clicked "+prod);
-//   if(cart[prod]==undefined)
-// {
-//   cart[prod]=1;
-// }
-// else{
-//   cart[prod]+=1;
-// }
-// localStorage.setItem("cart", JSON.stringify(cart));
-// var total_items=0;
-// for(var item in cart)
-// {
-//   total_items+=cart[item];
-// }
-// $(".minus").click(function(){
-//   var id=this.id.slice(6);
-//   console.log("minus clicked");
-//   if(cart["cart-"+id]>0)
-// {
-//   cart["cart-"+id]-=1;
-//   if(cart["cart-"+id]==0)
-//   {
-//     delete cart["cart-"+id];
-//   }
-// }
-// })
-// // cart_Tab.innerHTML=`Cart-items(Objects:${Object.keys(cart).length})`;
-// cart_Tab.innerHTML=`Cart-items(Objects:${total_items})`;
-// console.log(cart);
-// });
-// function update_cart_btn(cart){
-//   for(var item in cart)
-//   {
-//     add_btn=document.getElementById(item);
-//     console.log(item);
-//     add_btn.innerHTML="<div class='btn minus btn-success' id='minus-"+item+"'>-</div><span>"+cart[item]+"</span><div class='btn add btn-success' id='add-"+item+"'>+</div>";
-//   }
-// }
-
 </script>
 
 {% endblock body %}
