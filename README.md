@@ -24,9 +24,10 @@ Make sure you have the following packages installed:
 - `django`
 - `django-mptt`
 - `razorpay`
-- `pillow` (for image processing)
+- 'dotenv'
+- 'django-allauth'
 
 ## 📸 Screenshots
 | Home Page (Infinite Scroll) | Merchant Dashboard (Analytics) |
 | :--- | :--- |
-| ![Home](shop/e-commerce-project-screenshots/index_page.png) | ![Dashboard](shop/e-commerce-project-screenshots/merchant_dashboard.png) |
+| ![Home](shop/e-commerce-project-screenshots/index_page.png) | ![Dashboard](shop/e-commerce-project-screenshots/merchant_dashboard.png) |![CheckoutPage](shop/e-commerce-project-screenshots/checkout_page.png) | ![RazorpayPaymentSuccess](shop/e-commerce-project-screenshots/razorpay_payment.png) |![SearchProducts](shop/e-commerce-project-screenshots/search_products.png) | ![GoogleAuth](shop/e-commerce-project-screenshots/google_authorization.png) |
