@@ -29,4 +29,4 @@ Make sure you have the following packages installed:
 ## 📸 Screenshots
 | Home Page (Infinite Scroll) | Merchant Dashboard (Analytics) |
 | :--- | :--- |
-| ![Home](shop/e-commerce-project-screenshots/Screenshot (114).png) | ![Dashboard](shop/e-commerce-project-screenshots/Screenshot (130).png) |
+| ![Home](shop/e-commerce-project-screenshots/index_page.png) | ![Dashboard](shop/e-commerce-project-screenshots/merchant_dashboard.png) |
